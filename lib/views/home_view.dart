@@ -1,4 +1,3 @@
-import 'package:buscadordecep/classes/tabbar_class.dart';
 import 'package:buscadordecep/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 
