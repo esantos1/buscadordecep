@@ -1,29 +1,44 @@
+import 'package:buscadordecep/controller/check_by_cep_controller.dart';
+import 'package:buscadordecep/shared/widgets/search_form_field.dart';
 import 'package:flutter/material.dart';
 
 class CheckByCepView extends StatelessWidget {
-  const CheckByCepView({super.key});
+  CheckByCepView({super.key});
+
+  final controller = CheckByCepController();
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           children: [
-            Expanded(
-              flex: 1,
-              child: Center(
-                child: Form(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            _form(),
             Expanded(
               flex: 2,
-              child: Column(
-                children: [],
+              child: Container(
+                color: Colors.yellow,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _form() => Form(
+        child: Row(
+          children: [
+            Expanded(
+              flex: 4,
+              child: SearchFormField(
+                controller: controller.model.txtCepController,
+                labelText: 'Insira o CEP',
+                hintText: 'Ex.: 99999999',
+              ),
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Icon(Icons.search),
               ),
             ),
           ],

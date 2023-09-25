@@ -31,10 +31,32 @@ class CheckByAddressModel {
     'TO'
   ];
 
+  static final cityTest = [
+    'Cidade A',
+    'Cidade B',
+    'Cidade C',
+    'Cidade D',
+    'Cidade E',
+    'Cidade F',
+    'Cidade G',
+    'Cidade H',
+    'Cidade I',
+    'Cidade J',
+  ];
+
   final dropdownUfItems = ufs
       .map((e) => DropdownMenuItem(
             value: e,
             child: Text(e),
           ))
       .toList();
+
+  final dropdowncityTestItems = cityTest
+      .map((e) => DropdownMenuItem(
+            value: e,
+            child: Text(e),
+          ))
+      .toList();
+
+  final txtStreetNameController = TextEditingController();
 }

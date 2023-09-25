@@ -23,7 +23,7 @@ class Address {
     this.siafi,
   });
 
-  Address fromJson(Map<String, dynamic> json) => Address(
+  factory Address.fromJson(Map<String, dynamic> json) => Address(
         cep: json['cep'],
         logradouro: json['logradouro'],
         complemento: json['complemento'],
@@ -48,4 +48,9 @@ class Address {
         'ddd': ddd,
         'siafi': siafi
       };
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
 }
