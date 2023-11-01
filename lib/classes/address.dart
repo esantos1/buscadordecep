@@ -1,14 +1,14 @@
 class Address {
-  final String _cep;
-  final String _logradouro;
-  final String _complemento;
-  final String _bairro;
-  final String _localidade;
-  final String _uf;
-  final String? _ibge;
-  final String? _gia;
-  final String? _ddd;
-  final String? _siafi;
+  late String _cep;
+  late String _logradouro;
+  late String _complemento;
+  late String _bairro;
+  late String _localidade;
+  late String _uf;
+  late String? _ibge;
+  late String? _gia;
+  late String? _ddd;
+  late String? _siafi;
 
   Address({
     required String cep,
@@ -58,6 +58,19 @@ class Address {
         'siafi': _siafi
       };
 
+  factory Address.empty() => Address(
+        cep: '',
+        logradouro: '',
+        complemento: '',
+        bairro: '',
+        localidade: '',
+        uf: '',
+        ibge: '',
+        gia: '',
+        ddd: '',
+        siafi: '',
+      );
+
   String get cep => _cep;
   String get logradouro => _logradouro;
   String get complemento => _complemento;
@@ -68,6 +81,19 @@ class Address {
   String? get gia => _gia;
   String? get ddd => _ddd;
   String? get siafi => _siafi;
+
+  bool isEmpty() {
+    return _cep.isEmpty &&
+        _logradouro.isEmpty &&
+        _complemento.isEmpty &&
+        _bairro.isEmpty &&
+        _localidade.isEmpty &&
+        _uf.isEmpty &&
+        (_ibge == null || _ibge!.isEmpty) &&
+        (_gia == null || _gia!.isEmpty) &&
+        (_ddd == null || _ddd!.isEmpty) &&
+        (_siafi == null || _siafi!.isEmpty);
+  }
 
   @override
   String toString() {
