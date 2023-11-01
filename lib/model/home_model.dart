@@ -6,11 +6,17 @@ import 'package:flutter/material.dart';
 class HomeModel {
   final tabsScreens = [
     TabBarClass(
-      tabBar: Tab(text: 'Pelo nome da rua'),
+      tabBar: Tab(
+        text: 'Pelo nome da rua',
+        icon: Icon(Icons.map),
+      ),
       child: CheckByAddressView(),
     ),
     TabBarClass(
-      tabBar: Tab(text: 'Pelo CEP'),
+      tabBar: Tab(
+        text: 'Pelo CEP',
+        icon: Icon(Icons.location_on),
+      ),
       child: CheckByCepView(),
     ),
   ];

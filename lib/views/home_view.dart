@@ -15,6 +15,7 @@ class HomeView extends StatelessWidget {
             title: Text('Buscador de endereço'),
             centerTitle: true,
             bottom: TabBar(
+              isScrollable: false,
               tabs: viewController.model.tabsScreens
                   .map((e) => e.tabBar)
                   .toList(),

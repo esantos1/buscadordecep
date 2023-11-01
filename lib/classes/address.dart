@@ -1,27 +1,36 @@
 class Address {
-  final String cep;
-  final String logradouro;
-  final String complemento;
-  final String bairro;
-  final String localidade;
-  final String uf;
-  final String? ibge;
-  final String? gia;
-  final String? ddd;
-  final String? siafi;
+  final String _cep;
+  final String _logradouro;
+  final String _complemento;
+  final String _bairro;
+  final String _localidade;
+  final String _uf;
+  final String? _ibge;
+  final String? _gia;
+  final String? _ddd;
+  final String? _siafi;
 
   Address({
-    required this.cep,
-    required this.logradouro,
-    required this.complemento,
-    required this.bairro,
-    required this.localidade,
-    required this.uf,
-    this.ibge,
-    this.gia,
-    this.ddd,
-    this.siafi,
-  });
+    required String cep,
+    required String logradouro,
+    required String complemento,
+    required String bairro,
+    required String localidade,
+    required String uf,
+    String? ibge,
+    String? gia,
+    String? ddd,
+    String? siafi,
+  })  : _siafi = siafi,
+        _ddd = ddd,
+        _gia = gia,
+        _ibge = ibge,
+        _uf = uf,
+        _localidade = localidade,
+        _bairro = bairro,
+        _logradouro = logradouro,
+        _complemento = complemento,
+        _cep = cep;
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
         cep: json['cep'],
@@ -37,17 +46,28 @@ class Address {
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'cep': cep,
-        'logradouro': logradouro,
-        'complemento': complemento,
-        'bairro': bairro,
-        'localidade': localidade,
-        'uf': uf,
-        'ibge': ibge,
-        'gia': gia,
-        'ddd': ddd,
-        'siafi': siafi
+        'cep': _cep,
+        'logradouro': _logradouro,
+        'complemento': _complemento,
+        'bairro': _bairro,
+        'localidade': _localidade,
+        'uf': _uf,
+        'ibge': _ibge,
+        'gia': _gia,
+        'ddd': _ddd,
+        'siafi': _siafi
       };
+
+  String get cep => _cep;
+  String get logradouro => _logradouro;
+  String get complemento => _complemento;
+  String get bairro => _bairro;
+  String get localidade => _localidade;
+  String get uf => _uf;
+  String? get ibge => _ibge;
+  String? get gia => _gia;
+  String? get ddd => _ddd;
+  String? get siafi => _siafi;
 
   @override
   String toString() {

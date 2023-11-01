@@ -8,18 +8,23 @@ class CheckByAddressView extends StatelessWidget {
   final controller = CheckByAddressController();
 
   @override
-  Widget build(BuildContext context) => Container(
-        margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-        child: Column(
-          children: [
-            Expanded(child: _form()),
-            Expanded(
-              flex: 2,
-              child: Container(
-                color: Colors.amber,
-              ),
-            )
-          ],
+  Widget build(BuildContext context) => SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height - 160,
+          ),
+          child: Column(
+            children: [
+              Expanded(child: _form()),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  color: Colors.amber,
+                ),
+              )
+            ],
+          ),
         ),
       );
 
@@ -28,8 +33,9 @@ class CheckByAddressView extends StatelessWidget {
           children: [
             SearchFormField(
               controller: controller.model.txtStreetNameController,
-              labelText: 'Insira o nome da rua',
+              labelText: 'Logradouro',
               hintText: 'Ex.: Praça da Sé, Rua Guaianazes',
+              helperText: 'Pode ser apenas uma parte do logradouro.',
             ),
             Spacer(),
             Row(
@@ -74,12 +80,14 @@ class SearchDropdownButtonFormField extends StatelessWidget {
   final String hintText;
   final List<DropdownMenuItem<dynamic>> items;
   final ValueChanged onChanged;
+  final String? Function(dynamic)? validator;
 
   const SearchDropdownButtonFormField({
     super.key,
     required this.hintText,
     required this.items,
     required this.onChanged,
+    this.validator,
   });
 
   @override
@@ -91,6 +99,7 @@ class SearchDropdownButtonFormField extends StatelessWidget {
       decoration: InputDecoration(
         border: OutlineInputBorder(),
       ),
+      validator: validator,
     );
   }
 }

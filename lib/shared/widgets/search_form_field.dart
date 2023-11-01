@@ -4,14 +4,16 @@ class SearchFormField extends StatelessWidget {
   final TextEditingController? controller;
   final String labelText;
   final String? hintText;
+  final String? helperText;
   final ValueChanged? onChanged;
   final String? Function(String?)? validator;
 
   const SearchFormField({
     super.key,
-    required this.controller,
+    this.controller,
     required this.labelText,
     this.hintText,
+    this.helperText,
     this.onChanged,
     this.validator,
   });
@@ -24,6 +26,7 @@ class SearchFormField extends StatelessWidget {
         label: Text(labelText),
         hintText: hintText,
         border: OutlineInputBorder(),
+        helperText: helperText,
       ),
       onChanged: onChanged,
       validator: validator,
