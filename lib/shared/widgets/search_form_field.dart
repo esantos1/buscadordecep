@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class SearchFormField extends StatelessWidget {
+  final bool clearButton;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
   final String labelText;
@@ -11,6 +12,7 @@ class SearchFormField extends StatelessWidget {
   final ValueChanged? onChanged;
   final ValueChanged? onFieldSubmitted;
   final String? Function(String?)? validator;
+  final TextInputAction? textInputAction;
 
   const SearchFormField({
     super.key,
@@ -23,6 +25,8 @@ class SearchFormField extends StatelessWidget {
     this.keyboardType,
     this.inputFormatters,
     this.onFieldSubmitted,
+    this.clearButton = true,
+    this.textInputAction,
   });
 
   @override
@@ -36,10 +40,19 @@ class SearchFormField extends StatelessWidget {
         hintText: hintText,
         border: OutlineInputBorder(),
         helperText: helperText,
+        suffixIcon:
+            clearButton && (controller != null && controller!.text.isNotEmpty)
+                ? IconButton(
+                    splashRadius: 16.0,
+                    onPressed: controller!.clear,
+                    icon: Icon(Icons.clear),
+                  )
+                : null,
       ),
       onChanged: onChanged,
       onFieldSubmitted: onFieldSubmitted,
       validator: validator,
+      textInputAction: textInputAction,
     );
   }
 }

@@ -14,7 +14,9 @@ class CheckByCepView extends StatefulWidget {
 
 class _CheckByCepViewState extends State<CheckByCepView> {
   final controller = CheckByCepController();
+  late TextEditingController txtCepController;
   final store = CheckByCepStore();
+  bool isButtonActive = false;
 
   final cepInputFormatters = [
     FilteringTextInputFormatter.digitsOnly,
@@ -23,10 +25,12 @@ class _CheckByCepViewState extends State<CheckByCepView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    store.addListener(() {
-      setState(() {});
+
+    txtCepController = TextEditingController();
+
+    txtCepController.addListener(() {
+      setState(() => isButtonActive = txtCepController.text.length == 9);
     });
   }
 
@@ -73,30 +77,30 @@ class _CheckByCepViewState extends State<CheckByCepView> {
   }
 
   Widget _form(BuildContext context) => Form(
-        child: Row(
-          children: [
-            Expanded(
-              flex: 4,
-              child: SearchFormField(
-                inputFormatters: cepInputFormatters,
-                keyboardType: TextInputType.number,
-                controller: controller.model.txtCepController,
-                labelText: 'Insira o CEP',
-                hintText: 'Ex.: 99999-999',
-                onFieldSubmitted: (value) => searchCep(context),
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: SearchFormField(
+                  inputFormatters: cepInputFormatters,
+                  keyboardType: TextInputType.number,
+                  controller: txtCepController,
+                  labelText: 'Insira o CEP',
+                  hintText: 'Ex.: 99999-999',
+                  onFieldSubmitted:
+                      isButtonActive ? (value) => searchCep(context) : null,
+                ),
               ),
-            ),
-            SizedBox(width: 8),
-            Expanded(
-              child: SizedBox(
-                height: 58,
+              SizedBox(width: 8),
+              Expanded(
                 child: ElevatedButton(
-                  onPressed: () => searchCep(context),
+                  onPressed: isButtonActive ? () => searchCep(context) : null,
                   child: Icon(Icons.search),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
 
@@ -145,8 +149,11 @@ class _CheckByCepViewState extends State<CheckByCepView> {
 
   void searchCep(BuildContext context) {
     FocusScope.of(context).unfocus();
+    setState(() {
+      isButtonActive = false;
+    });
 
-    store.getAddress(controller.model.txtCepController.text);
+    store.getAddress(txtCepController.text);
   }
 
   void copyData(String value, BuildContext context, String label) {

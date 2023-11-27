@@ -17,7 +17,7 @@ class CheckByCepController {
       final body = json.decode(response.body);
 
       if (body.containsKey('erro') && body['erro']) {
-        throw Exception('CEP não encontrado');
+        throw Exception('Não existe endereço para esse CEP.');
       } else {
         Address address = Address.fromJson(body);
 
