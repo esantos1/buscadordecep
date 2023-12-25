@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CheckByAddressModel {
-  static final ufs = [
+  late final ufs = [
     'AC',
     'AL',
     'AP',
@@ -31,32 +31,22 @@ class CheckByAddressModel {
     'TO'
   ];
 
-  static final cityTest = [
-    'Cidade A',
-    'Cidade B',
-    'Cidade C',
-    'Cidade D',
-    'Cidade E',
-    'Cidade F',
-    'Cidade G',
-    'Cidade H',
-    'Cidade I',
-    'Cidade J',
-  ];
+  late List<String> cities = [];
 
-  final dropdownUfItems = ufs
+  List<DropdownMenuItem<String>> buildDropdownUfItems() => ufs
       .map((e) => DropdownMenuItem(
             value: e,
             child: Text(e),
           ))
       .toList();
 
-  final dropdowncityTestItems = cityTest
+  List<DropdownMenuItem<String>> buildDropdownCitiesItems() => cities
       .map((e) => DropdownMenuItem(
             value: e,
             child: Text(e),
           ))
       .toList();
 
-  final txtStreetNameController = TextEditingController();
+  String ufValue = '';
+  String? cityValue = '';
 }

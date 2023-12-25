@@ -2,12 +2,8 @@ import 'dart:convert';
 
 import 'package:buscadordecep/classes/address.dart';
 import 'package:http/http.dart' as http;
-import 'package:buscadordecep/model/check_by_cep_model.dart';
 
 class CheckByCepController {
-  //instância do model
-  final model = CheckByCepModel();
-
   //funções de requisição
   Future<Address> fetchData(String cep) async {
     final url = 'https://viacep.com.br/ws/$cep/json/';
@@ -27,7 +23,7 @@ class CheckByCepController {
       throw Exception('CEP Inválido!');
     } else {
       throw Exception(
-          'Desculpe, ocorreu um erro interno. Por Favor, tente novamente.');
+          'Desculpe, ocorreu um erro interno. Por Favor, tente novamente mais tarde.');
     }
   }
 

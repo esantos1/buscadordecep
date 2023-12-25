@@ -96,7 +96,5 @@ class Address {
   }
 
   @override
-  String toString() {
-    return toJson().toString();
-  }
+  String toString() => toJson().toString();
 }

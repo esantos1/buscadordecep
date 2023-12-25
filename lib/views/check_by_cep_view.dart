@@ -36,7 +36,7 @@ class _CheckByCepViewState extends State<CheckByCepView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body = Container();
+    Widget body = SizedBox();
 
     return ListenableBuilder(
         listenable: store,
@@ -51,7 +51,7 @@ class _CheckByCepViewState extends State<CheckByCepView> {
               ),
             );
           } else if (store.address.isEmpty()) {
-            body = Container();
+            body = SizedBox();
           } else {
             body = _addressDetails(context);
           }
@@ -65,10 +65,7 @@ class _CheckByCepViewState extends State<CheckByCepView> {
               child: Column(
                 children: [
                   _form(context),
-                  Expanded(
-                    flex: 2,
-                    child: body,
-                  ),
+                  Expanded(flex: 2, child: body),
                 ],
               ),
             ),
@@ -108,15 +105,26 @@ class _CheckByCepViewState extends State<CheckByCepView> {
     final complemento =
         store.address.complemento.isNotEmpty ? store.address.complemento : '-';
 
+    String enderecoCompleto = '';
+
+    if (store.address.logradouro.isEmpty && store.address.bairro.isEmpty) {
+      enderecoCompleto = '${store.address.localidade} - ${store.address.uf}';
+    } else {
+      enderecoCompleto =
+          '${store.address.logradouro}, ${store.address.bairro}, ${store.address.localidade} - ${store.address.uf}';
+    }
+
     return Padding(
       padding: EdgeInsets.only(top: 16.0),
       child: ListView(
         // mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          _dataAddressItem(context, 'CEP', store.address.cep),
+          SizedBox(height: 8),
           _dataAddressItem(
             context,
             'Endereço completo',
-            '${store.address.logradouro}, ${store.address.bairro}, ${store.address.localidade} - ${store.address.uf}',
+            enderecoCompleto,
             isThreeLine: true,
           ),
           SizedBox(height: 8),
@@ -139,19 +147,19 @@ class _CheckByCepViewState extends State<CheckByCepView> {
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(value, style: TextStyle(fontSize: 16.0)),
-          trailing: IconButton(
-            icon: Icon(Icons.copy),
-            onPressed: () => copyData(value, context, label),
-          ),
+          trailing: value == '-'
+              ? null
+              : IconButton(
+                  icon: Icon(Icons.copy),
+                  onPressed: () => copyData(value, context, label),
+                ),
           isThreeLine: isThreeLine ?? false,
         ),
       );
 
   void searchCep(BuildContext context) {
     FocusScope.of(context).unfocus();
-    setState(() {
-      isButtonActive = false;
-    });
+    setState(() => isButtonActive = false);
 
     store.getAddress(txtCepController.text);
   }
@@ -159,13 +167,10 @@ class _CheckByCepViewState extends State<CheckByCepView> {
   void copyData(String value, BuildContext context, String label) {
     Clipboard.setData(ClipboardData(text: value));
 
-    showSnackBarData(context, label);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$label copiado para a área de transferência'),
+      ),
+    );
   }
-
-  void showSnackBarData(BuildContext context, String label) =>
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$label copiado para a área de transferência'),
-        ),
-      );
 }

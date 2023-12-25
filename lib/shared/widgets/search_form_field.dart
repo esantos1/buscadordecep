@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 class SearchFormField extends StatelessWidget {
   final bool clearButton;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final List<TextInputFormatter>? inputFormatters;
   final String labelText;
   final String? hintText;
@@ -27,6 +28,7 @@ class SearchFormField extends StatelessWidget {
     this.onFieldSubmitted,
     this.clearButton = true,
     this.textInputAction,
+    this.focusNode,
   });
 
   @override
@@ -34,6 +36,7 @@ class SearchFormField extends StatelessWidget {
     return TextFormField(
       keyboardType: keyboardType,
       controller: controller,
+      focusNode: focusNode,
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
         label: Text(labelText),
