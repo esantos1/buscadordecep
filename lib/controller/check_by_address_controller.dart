@@ -35,6 +35,11 @@ class CheckByAddressController {
       List<Address> addresses =
           body.map<Address>((item) => Address.fromJson(item)).toList();
 
+      if (addresses.isEmpty) {
+        throw Exception(
+            'Não foram encontrados CEPs relacionados aos termos pesquisado.');
+      }
+
       return addresses;
     } else if (response.statusCode == 400) {
       throw Exception('Endereço Inválido!');

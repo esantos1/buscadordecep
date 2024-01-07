@@ -48,5 +48,5 @@ class CheckByAddressModel {
       .toList();
 
   String ufValue = '';
-  String? cityValue = '';
+  String cityValue = '';
 }

@@ -35,20 +35,16 @@ class _CheckByCepViewState extends State<CheckByCepView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    Widget body = SizedBox();
-
-    return ListenableBuilder(
+  Widget build(BuildContext context) => ListenableBuilder(
         listenable: store,
         builder: (context, child) {
+          Widget body = SizedBox();
+
           if (store.isLoading) {
             body = Center(child: CircularProgressIndicator());
           } else if (store.error.isNotEmpty) {
             body = Center(
-              child: Text(
-                store.error,
-                style: TextStyle(fontSize: 16.0),
-              ),
+              child: Text(store.error, style: TextStyle(fontSize: 16.0)),
             );
           } else if (store.address.isEmpty()) {
             body = SizedBox();
@@ -70,8 +66,8 @@ class _CheckByCepViewState extends State<CheckByCepView> {
               ),
             ),
           );
-        });
-  }
+        },
+      );
 
   Widget _form(BuildContext context) => Form(
         child: IntrinsicHeight(

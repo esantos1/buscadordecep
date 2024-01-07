@@ -10,7 +10,7 @@ class CheckByAddressStore extends ChangeNotifier {
   List<Address> addresses = [];
 
   void getAddresses({
-    String? logradouro,
+    required String logradouro,
     required String cidade,
     required String uf,
   }) async {
@@ -19,8 +19,7 @@ class CheckByAddressStore extends ChangeNotifier {
     notifyListeners();
 
     try {
-      addresses = await controller.getAddresses(
-          logradouro ?? 'rua inexistente', uf, cidade);
+      addresses = await controller.getAddresses(logradouro, uf, cidade);
       error = '';
       notifyListeners();
     } catch (e) {
