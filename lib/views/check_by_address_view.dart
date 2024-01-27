@@ -14,10 +14,11 @@ class CheckByAddressView extends StatefulWidget {
 }
 
 class _CheckByAddressViewState extends State<CheckByAddressView>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   final store = CheckByAddressStore();
   final txtLogradouroController = TextEditingController();
   final txtDropdownSearchBarController = TextEditingController();
+  late AnimationController itemAnimationController;
 
   bool isLoadingCities = false;
   bool isFilledStreetName = false;
@@ -29,6 +30,17 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
 
     txtLogradouroController.addListener(() => setState(
         () => isFilledStreetName = txtLogradouroController.text.isNotEmpty));
+
+    itemAnimationController = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    itemAnimationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -160,6 +172,7 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
   Widget _buildListItems() => Column(
         children: [
           Expanded(
+            flex: 2,
             child: ListView(
               children: [
                 Text(
@@ -201,35 +214,43 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
       headerText = '${item.logradouro}, ${item.bairro} ${item.complemento}';
     } else if (item.complemento.isNotEmpty) {
       headerText = '${item.logradouro}, ${item.bairro} (${item.complemento})';
+    } else if (item.logradouro.isEmpty) {
+      headerText = '${item.localidade} - ${item.uf}';
     } else {
       headerText = '${item.logradouro}, ${item.bairro}';
     }
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: ExpansionTile(
-        key: Key(_expandedIndex.toString()),
-        trailing: Icon(
-          _expandedIndex == index
-              ? Icons.arrow_drop_down_circle
-              : Icons.arrow_drop_down,
-          color: primaryColor,
-        ),
-        title: Text(headerText, style: TextStyle(color: primaryColor)),
-        onExpansionChanged: (expanded) =>
-            setState(() => _expandedIndex = expanded ? index : -1),
-        initiallyExpanded: index == _expandedIndex,
-        children: [
-          ListTile(
-            title: Text(item.cep),
-            trailing: TextButton.icon(
-              onPressed: _copyCep,
-              icon: Icon(Icons.copy),
-              label: Text('Copiar CEP'),
-            ),
-          ),
-        ],
-      ),
+      child: AnimatedBuilder(
+          animation: itemAnimationController,
+          builder: (context, child) => ExpansionTile(
+                key: Key(_expandedIndex.toString()),
+                trailing: RotationTransition(
+                  turns: Tween(begin: 0.0, end: 0.25)
+                      .animate(itemAnimationController),
+                  child: Icon(
+                    _expandedIndex == index
+                        ? Icons.arrow_drop_down_circle
+                        : Icons.arrow_drop_down,
+                    color: primaryColor,
+                  ),
+                ),
+                title: Text(headerText, style: TextStyle(color: primaryColor)),
+                onExpansionChanged: (expanded) =>
+                    setState(() => _expandedIndex = expanded ? index : -1),
+                initiallyExpanded: index == _expandedIndex,
+                children: [
+                  ListTile(
+                    title: Text(item.cep),
+                    trailing: TextButton.icon(
+                      onPressed: _copyCep,
+                      icon: Icon(Icons.copy),
+                      label: Text('Copiar CEP'),
+                    ),
+                  ),
+                ],
+              )),
     );
   }
 

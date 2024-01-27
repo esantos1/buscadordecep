@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class TabBarClass {
-  final Tab tabBar;
+class HomeScreenItem {
+  final BottomNavigationBarItem itemButton;
   final Widget child;
 
-  TabBarClass({required this.tabBar, required this.child});
+  HomeScreenItem({required this.itemButton, required this.child});
 }
