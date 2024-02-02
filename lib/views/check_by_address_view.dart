@@ -120,8 +120,14 @@ class _CheckByAddressViewState extends State<CheckByAddressView> {
             .removeDiacritics(item.toLowerCase())
             .contains(diacritc.removeDiacritics(filter.toLowerCase())),
         enabled: !isLoadingCities && store.controller.model.ufValue.isNotEmpty,
-        popupProps: PopupProps.menu(
+        popupProps: PopupProps.modalBottomSheet(
           showSearchBox: true,
+          modalBottomSheetProps: ModalBottomSheetProps(
+            padding: EdgeInsets.only(top: 16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+            ),
+          ),
           searchDelay: Duration(milliseconds: 0),
           searchFieldProps: TextFieldProps(
             controller: txtDropdownSearchBarController,
