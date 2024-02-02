@@ -1,16 +1,9 @@
-# buscadordecep
+# Buscador de CEP
 
-A new Flutter project.
+Um buscador de CEP simples, que permite a procura de um CEP a partir de um endereço (logradouro, cidade e UF) e a procura de um endereço a partir do CEP.
 
-## Getting Started
+Os resultados são exibidos a partir da busca na API [ViaCep](https://viacep.com.br/) e [IBGE](https://servicodados.ibge.gov.br/api/docs/) (busca de cidades por estado).
 
-This project is a starting point for a Flutter application.
+Foram exercitados requisições em APIs e Gerenciamento de estado (Change Notifier - nativo).
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+O projeto foi construido na arquitetura MVC (Model, View e Controller).

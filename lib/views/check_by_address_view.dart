@@ -5,6 +5,7 @@ import 'package:buscadordecep/store/check_by_address_store.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:diacritic/diacritic.dart' as diacritc;
 
 class CheckByAddressView extends StatefulWidget {
   const CheckByAddressView({super.key});
@@ -13,16 +14,13 @@ class CheckByAddressView extends StatefulWidget {
   State<CheckByAddressView> createState() => _CheckByAddressViewState();
 }
 
-class _CheckByAddressViewState extends State<CheckByAddressView>
-    with SingleTickerProviderStateMixin {
+class _CheckByAddressViewState extends State<CheckByAddressView> {
   final store = CheckByAddressStore();
   final txtLogradouroController = TextEditingController();
   final txtDropdownSearchBarController = TextEditingController();
-  late AnimationController itemAnimationController;
 
   bool isLoadingCities = false;
   bool isFilledStreetName = false;
-  int _expandedIndex = -1;
 
   @override
   void initState() {
@@ -30,17 +28,6 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
 
     txtLogradouroController.addListener(() => setState(
         () => isFilledStreetName = txtLogradouroController.text.isNotEmpty));
-
-    itemAnimationController = AnimationController(
-      duration: Duration(milliseconds: 300),
-      vsync: this,
-    );
-  }
-
-  @override
-  void dispose() {
-    itemAnimationController.dispose();
-    super.dispose();
   }
 
   @override
@@ -49,7 +36,9 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
         builder: (context, child) => Container(
           padding: EdgeInsets.all(16.0),
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height - 200,
+            maxHeight: store.addresses.isNotEmpty
+                ? double.infinity
+                : MediaQuery.of(context).size.height - 200,
           ),
           child: _getBody(),
         ),
@@ -87,6 +76,9 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
               labelText: 'Logradouro',
               hintText: 'Ex.: Rua Guaianazes, Domingos',
               helperText: '* Pode ser apenas uma parte do logradouro.',
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-ZÀ-ú ]'))
+              ],
             ),
             SizedBox(height: 16),
             Row(
@@ -124,26 +116,23 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
       );
 
   Widget _dropDownSearchCities() => DropdownSearch<String>(
+        filterFn: (item, filter) => diacritc
+            .removeDiacritics(item.toLowerCase())
+            .contains(diacritc.removeDiacritics(filter.toLowerCase())),
         enabled: !isLoadingCities && store.controller.model.ufValue.isNotEmpty,
-        popupProps: PopupProps.modalBottomSheet(
+        popupProps: PopupProps.menu(
           showSearchBox: true,
-          modalBottomSheetProps: ModalBottomSheetProps(
-            padding: EdgeInsets.only(top: 16.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
-            ),
-          ),
           searchDelay: Duration(milliseconds: 0),
           searchFieldProps: TextFieldProps(
             controller: txtDropdownSearchBarController,
-            textInputAction: TextInputAction.next,
+            textInputAction: TextInputAction.go,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               hintText: 'Digite a cidade',
               hintStyle: TextStyle(color: Colors.grey[500]),
             ),
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]'))
+              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-ZÀ-ú0-9 ]'))
             ],
           ),
           emptyBuilder: (context, searchEntry) => Center(
@@ -172,29 +161,15 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
   Widget _buildListItems() => Column(
         children: [
           Expanded(
-            flex: 2,
-            child: ListView(
-              children: [
-                Text(
-                  'Exibindo ${store.addresses.length} resultados para ${store.controller.model.cityValue} - ${store.controller.model.ufValue}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: Colors.black54),
-                ),
-                SizedBox(height: 16.0),
-                ListView.separated(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: store.addresses.length,
-                  itemBuilder: (context, index) {
-                    final item = store.addresses[index];
-
-                    return _buildItem(item, index);
-                  },
-                  separatorBuilder: (_, __) => SizedBox(height: 18.0),
-                ),
-              ],
+            flex: 8,
+            child: SingleChildScrollView(
+              child: ExpansionPanelList.radio(
+                materialGapSize: 32.0,
+                expandIconColor: Theme.of(context).primaryColor,
+                expandedHeaderPadding: EdgeInsets.symmetric(vertical: 0),
+                elevation: 4,
+                children: store.addresses.map(_buildItem).toList(),
+              ),
             ),
           ),
           Container(
@@ -206,8 +181,7 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
         ],
       );
 
-  Widget _buildItem(Address item, int index) {
-    final primaryColor = Theme.of(context).primaryColor;
+  ExpansionPanelRadio _buildItem(Address item) {
     String headerText = '';
 
     if (item.complemento.contains('(') && item.complemento.contains(')')) {
@@ -220,37 +194,24 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
       headerText = '${item.logradouro}, ${item.bairro}';
     }
 
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: AnimatedBuilder(
-          animation: itemAnimationController,
-          builder: (context, child) => ExpansionTile(
-                key: Key(_expandedIndex.toString()),
-                trailing: RotationTransition(
-                  turns: Tween(begin: 0.0, end: 0.25)
-                      .animate(itemAnimationController),
-                  child: Icon(
-                    _expandedIndex == index
-                        ? Icons.arrow_drop_down_circle
-                        : Icons.arrow_drop_down,
-                    color: primaryColor,
-                  ),
-                ),
-                title: Text(headerText, style: TextStyle(color: primaryColor)),
-                onExpansionChanged: (expanded) =>
-                    setState(() => _expandedIndex = expanded ? index : -1),
-                initiallyExpanded: index == _expandedIndex,
-                children: [
-                  ListTile(
-                    title: Text(item.cep),
-                    trailing: TextButton.icon(
-                      onPressed: _copyCep,
-                      icon: Icon(Icons.copy),
-                      label: Text('Copiar CEP'),
-                    ),
-                  ),
-                ],
-              )),
+    return ExpansionPanelRadio(
+      backgroundColor: CardTheme.of(context).color,
+      canTapOnHeader: true,
+      value: item,
+      headerBuilder: (context, isExpanded) => ListTile(
+        title: Text(
+          headerText,
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+      ),
+      body: ListTile(
+        // title: Text(item.cep),
+        leading: TextButton.icon(
+          onPressed: () => _copyCep(item.cep),
+          icon: Icon(Icons.copy),
+          label: Text(item.cep),
+        ),
+      ),
     );
   }
 
@@ -260,15 +221,18 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
       );
 
   void onUfDropdownChanged(value) async {
-    List<String> ufs = [];
+    List<String> cities = [];
 
-    store.controller.model.cityValue = '';
-    store.controller.model.ufValue = value;
+    txtDropdownSearchBarController.clear();
+    setState(() {
+      store.controller.model.cityValue = '';
+      store.controller.model.ufValue = value;
+    });
 
     try {
       isLoadingCities = true;
 
-      ufs = await store.controller.getCities(value);
+      cities = await store.controller.getCities(value);
     } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -281,7 +245,7 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
 
     setState(() {
       store.controller.model.cities.clear();
-      store.controller.model.cities = ufs;
+      store.controller.model.cities = cities;
     });
   }
 
@@ -295,7 +259,15 @@ class _CheckByAddressViewState extends State<CheckByAddressView>
     );
   }
 
-  void _copyCep() {}
+  void _copyCep(String value) {
+    Clipboard.setData(ClipboardData(text: value));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('CEP $value copiado para a área de transferência'),
+      ),
+    );
+  }
 
   void _searchNewAddresses() {
     store.addresses.clear();

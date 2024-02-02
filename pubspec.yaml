@@ -37,6 +37,7 @@ dependencies:
   http:
   brasil_fields: ^1.14.0
   dropdown_search: ^5.0.6
+  diacritic: ^0.1.5
 
 dev_dependencies:
   flutter_test:

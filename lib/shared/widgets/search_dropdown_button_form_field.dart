@@ -5,7 +5,7 @@ class SearchDropdownButtonFormField<T> extends StatelessWidget {
   final Widget? icon;
   final T? value;
   final List<DropdownMenuItem<T>> items;
-  final ValueChanged onChanged;
+  final Function(T?)? onChanged;
   final VoidCallback? onTap;
   final String? Function(dynamic)? validator;
 

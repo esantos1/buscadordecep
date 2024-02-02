@@ -147,7 +147,7 @@ class _CheckByCepViewState extends State<CheckByCepView> {
               ? null
               : IconButton(
                   icon: Icon(Icons.copy),
-                  onPressed: () => copyData(value, context, label),
+                  onPressed: () => _copyCep(label, value),
                 ),
           isThreeLine: isThreeLine ?? false,
         ),
@@ -160,7 +160,7 @@ class _CheckByCepViewState extends State<CheckByCepView> {
     store.getAddress(txtCepController.text);
   }
 
-  void copyData(String value, BuildContext context, String label) {
+  void _copyCep(String label, String value) {
     Clipboard.setData(ClipboardData(text: value));
 
     ScaffoldMessenger.of(context).showSnackBar(

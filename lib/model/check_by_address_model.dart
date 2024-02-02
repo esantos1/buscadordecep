@@ -40,13 +40,6 @@ class CheckByAddressModel {
           ))
       .toList();
 
-  List<DropdownMenuItem<String>> buildDropdownCitiesItems() => cities
-      .map((e) => DropdownMenuItem(
-            value: e,
-            child: Text(e),
-          ))
-      .toList();
-
   String ufValue = '';
   String cityValue = '';
 }
