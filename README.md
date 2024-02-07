@@ -24,4 +24,4 @@ O projeto foi construido na arquitetura MVC (Model, View e Controller).
 
 Teste o app!
 
-- [Android](https://github.com/esantos1/buscadordecep/blob/main/.github/build/buscadordecep.apk)https://github.com/esantos1/buscadordecep/blob/main/.github/build/buscadordecep.apk)
+- [Android](https://github.com/esantos1/buscadordecep/blob/main/.github/build/buscadordecep.apk)
